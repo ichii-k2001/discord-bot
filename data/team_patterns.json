@@ -1,0 +1,38 @@
+{
+  "default": [
+    "role:前衛キル特化ブキ",
+    "role:前衛キル特化ブキ",
+    "role:オールラウンダーブキ",
+    "role:後衛ブキ"
+  ],
+  "no_backline": [
+    "role:前衛キル特化ブキ",
+    "role:前衛キル特化ブキ",
+    "role:オールラウンダーブキ",
+    "role:オールラウンダーブキ"
+  ],
+  "no_backline_paint_focus": [
+    "role:前衛キル特化ブキ",
+    "role:前衛キル特化ブキ",
+    "role:オールラウンダーブキ",
+    "role:塗り特化ブキ"
+  ],
+  "support_focus": [
+    "role:前衛キル特化ブキ",
+    "role:前衛キル特化ブキ",
+    "role:オールラウンダーブキ",
+    "role:サポート特化ブキ"
+  ],
+  "hatetank_focus": [
+    "role:ヘイト特化ブキ",
+    "role:前衛キル特化ブキ",
+    "role:前衛キル特化ブキ",
+    "role:オールラウンダーブキ"
+  ],
+  "paint_focus": [
+    "role:前衛キル特化ブキ",
+    "role:オールラウンダーブキ",
+    "role:塗り特化ブキ",
+    "role:後衛ブキ"
+  ]
+}
