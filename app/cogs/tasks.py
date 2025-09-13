@@ -6,14 +6,14 @@ import json
 import os
 from typing import Optional
 from app.services.google_sheets import GoogleSheetsService
-from app.services.user_settings import UserSettingsService
+
 
 class TaskManager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.tasks_file = "data/tasks.json"
         self.google_sheets = GoogleSheetsService()
-        self.user_settings = UserSettingsService()
+
         self.use_google_sheets = self.google_sheets.is_available()
         self.ensure_data_dir()
 
@@ -130,9 +130,6 @@ class TaskManager(commands.Cog):
         ]
     )
     async def list_tasks(self, interaction: discord.Interaction, status: Optional[str] = "pending", priority: Optional[str] = "all"):
-        user_id = str(interaction.user.id)
-        guild_id = str(interaction.guild.id) if interaction.guild else "dm"
-        
         # Googleスプレッドシート連携が有効な場合はGoogleから取得
         if self.use_google_sheets:
             filtered_tasks = self.google_sheets.get_tasks(status, priority)
@@ -149,8 +146,7 @@ class TaskManager(commands.Cog):
                     continue
                 filtered_tasks.append(task)
         
-        # プライバシー設定に基づいてフィルタリング
-        filtered_tasks = self.user_settings.get_filtered_data(filtered_tasks, user_id, guild_id, "tasks")
+
         
         # ソート（優先度 > 期限 > 作成日時）
         priority_order = {"high": 0, "medium": 1, "low": 2}
@@ -166,8 +162,7 @@ class TaskManager(commands.Cog):
             status_text = {"all": "すべて", "pending": "未完了", "completed": "完了済み"}
             priority_text = {"all": "すべて", "high": "高", "medium": "中", "low": "低"}
             sync_status = "（Googleスプレッドシートと同期）" if self.use_google_sheets else ""
-            privacy_status = "（プライベートモード）" if self.user_settings.is_private_mode(user_id, guild_id, "tasks") else "（共有モード）"
-            response = f"📋 タスク一覧（状態: {status_text.get(status, status)}, 優先度: {priority_text.get(priority, priority)}）{sync_status}{privacy_status}\n\n"
+            response = f"📋 タスク一覧（状態: {status_text.get(status, status)}, 優先度: {priority_text.get(priority, priority)}）{sync_status}\n\n"
             
             for task in filtered_tasks:
                 priority_emoji = {"high": "🔴", "medium": "🟡", "low": "🟢"}
@@ -381,9 +376,7 @@ class TaskHelp(commands.Cog):
             "　- Googleスプレッドシートとの同期状態を確認します\n\n"
             "👉 `/task_help`\n"
             "　- このコマンド一覧を表示します\n\n"
-            "🔒 **プライバシー設定**\n"
-            "👉 `/privacy_mode` - 共有/プライベートモードの切り替え\n"
-            "👉 `/privacy_status` - 現在の設定確認\n\n"
+
             "💡 **使用例:**\n"
             "`/task_add レポート作成 2025-01-20 high 月次売上レポートの作成`\n\n"
             "🔄 **Googleスプレッドシート連携**: " + ("有効" if self.bot.get_cog('TaskManager').use_google_sheets else "無効")

@@ -6,14 +6,14 @@ import json
 import os
 from typing import Optional
 from app.services.google_calendar import GoogleCalendarService
-from app.services.user_settings import UserSettingsService
+
 
 class CalendarManager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.events_file = "data/events.json"
         self.google_calendar = GoogleCalendarService()
-        self.user_settings = UserSettingsService()
+
         self.use_google_calendar = self.google_calendar.is_available()
         self.ensure_data_dir()
 
@@ -112,9 +112,6 @@ class CalendarManager(commands.Cog):
     @app_commands.command(name="calendar_list", description="予定一覧を表示します")
     @app_commands.describe(days="何日後まで表示するか（デフォルト: 7日）")
     async def list_events(self, interaction: discord.Interaction, days: Optional[int] = 7):
-        user_id = str(interaction.user.id)
-        guild_id = str(interaction.guild.id) if interaction.guild else "dm"
-        
         # Googleカレンダー連携が有効な場合はGoogleから取得
         if self.use_google_calendar:
             google_events = self.google_calendar.get_events(days)
@@ -143,8 +140,7 @@ class CalendarManager(commands.Cog):
                 if today <= event_date <= end_date:
                     upcoming_events.append(event)
         
-        # プライバシー設定に基づいてフィルタリング
-        upcoming_events = self.user_settings.get_filtered_data(upcoming_events, user_id, guild_id, "calendar")
+
         
         upcoming_events.sort(key=lambda x: (x["date"], x["time"] or "00:00"))
         
@@ -152,8 +148,7 @@ class CalendarManager(commands.Cog):
             response = f"📅 今後{days}日間の予定はありません。"
         else:
             sync_status = "（Googleカレンダーと同期）" if self.use_google_calendar else ""
-            privacy_status = "（プライベートモード）" if self.user_settings.is_private_mode(user_id, guild_id, "calendar") else "（共有モード）"
-            response = f"📅 今後{days}日間の予定一覧{sync_status}{privacy_status}\n\n"
+            response = f"📅 今後{days}日間の予定一覧{sync_status}\n\n"
             for event in upcoming_events:
                 time_str = f" {event['time']}" if event['time'] else ""
                 desc_str = f"\n　📝 {event['description']}" if event['description'] and event['description'].strip() else ""
@@ -243,9 +238,7 @@ class CalendarHelp(commands.Cog):
             "　- Googleカレンダーとの同期状態を確認します\n\n"
             "👉 `/calendar_help`\n"
             "　- このコマンド一覧を表示します\n\n"
-            "🔒 **プライバシー設定**\n"
-            "👉 `/privacy_mode` - 共有/プライベートモードの切り替え\n"
-            "👉 `/privacy_status` - 現在の設定確認\n\n"
+
             "💡 **使用例:**\n"
             "`/calendar_add 会議 2025-01-15 14:30 プロジェクト進捗確認`\n\n"
             "🔄 **Googleカレンダー連携**: " + ("有効" if self.bot.get_cog('CalendarManager').use_google_calendar else "無効")

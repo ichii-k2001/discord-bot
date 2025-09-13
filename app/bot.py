@@ -13,9 +13,10 @@ class MultiFeatureBot(commands.Bot):
     async def setup_hook(self):
         # 各機能のCogを読み込み
         await self.load_extension("app.cogs.splatoon")
-        await self.load_extension("app.cogs.calendar")
-        await self.load_extension("app.cogs.tasks")
-        await self.load_extension("app.cogs.user_management")
+        # await self.load_extension("app.cogs.calendar")  # 一時的に無効化（Google連携設定待ち）
+        # await self.load_extension("app.cogs.tasks")     # 一時的に無効化（Google連携設定待ち）
+
+        await self.load_extension("app.cogs.qr")
         await self.load_extension("app.cogs.general")
         
         # スラッシュコマンドを同期

@@ -19,25 +19,25 @@ discord-bot/
 │   │   ├── splatoon.py      # スプラトゥーン機能
 │   │   ├── calendar.py      # カレンダー機能
 │   │   ├── tasks.py         # タスク管理機能
-│   │   ├── user_management.py # プライバシー管理機能
+│   │   ├── qr.py            # QRコード機能
 │   │   └── general.py       # 全般機能
 │   └── services/            # サービス層
 │       ├── google_calendar.py   # Googleカレンダー連携
 │       ├── google_sheets.py     # Googleスプレッドシート連携
-│       └── user_settings.py     # ユーザー設定管理
+
 ├── data/                    # データファイル保存用
 │   ├── .gitkeep
 │   ├── weapon_to_groups.json    # ブキデータ
 │   ├── team_patterns.json       # 編成パターン
 │   ├── events.json              # カレンダー予定データ（自動生成）
 │   ├── tasks.json               # タスクデータ（自動生成）
-│   └── user_settings.json       # ユーザー設定（自動生成）
+
 ├── docs/                    # ドキュメント
 │   ├── SETUP.md
 │   ├── FEATURES.md
 │   ├── GOOGLE_CALENDAR_SETUP.md
 │   ├── GOOGLE_SHEETS_SETUP.md
-│   └── PRIVACY_MANAGEMENT.md
+
 ├── server.py                # FastAPI + Bot起動エントリーポイント
 ├── requirements.txt         # ライブラリ定義
 ├── Dockerfile               # デプロイ用設定
@@ -152,30 +152,28 @@ uvicorn server:app --host 0.0.0.0 --port 8080
 - `/splatoon_role <ロール名>` - ロール別ブキ一覧
 - `/splatoon_pattern [パターン名]` - 編成パターン確認
 
-### 📅 カレンダー機能
-- `/calendar_help` - カレンダー機能のヘルプ
-- `/calendar_add <タイトル> <日付> [時刻] [説明]` - 予定追加（Googleカレンダー連携対応）
-- `/calendar_list [日数]` - 予定一覧表示（Googleカレンダーから取得）
-- `/calendar_today` - 今日の予定表示
-- `/calendar_delete <予定ID>` - 予定削除
-- `/calendar_sync` - Googleカレンダー連携状態確認
+### 📅 カレンダー機能 ⚠️ 実装予定
+Google Calendar連携の設定完了後に以下の機能が利用可能になります：
+- 予定の追加・編集・削除
+- 予定一覧表示・今日の予定確認
+- Googleカレンダーとの自動同期
+- 期限通知機能
 
-### 📋 タスク管理機能
-- `/task_help` - タスク管理機能のヘルプ
-- `/task_add <タイトル> [期限] [優先度] [説明]` - タスク追加（Googleスプレッドシート連携対応）
-- `/task_list [状態] [優先度]` - タスク一覧表示（Googleスプレッドシートから取得）
-- `/task_complete <タスクID>` - タスク完了
-- `/task_delete <タスクID>` - タスク削除
-- `/task_due [日数]` - 期限確認
-- `/task_sync` - Googleスプレッドシート連携状態確認
+### 📋 タスク管理機能 ⚠️ 実装予定
+Google Sheets連携の設定完了後に以下の機能が利用可能になります：
+- タスクの追加・完了・削除
+- 優先度設定・期限管理
+- Googleスプレッドシートとの自動同期
+- 期限切れ警告機能
+
+### 📱 QRコード機能
+- `/qr_help` - QRコード機能のヘルプ
+- `/qr <テキスト>` - QRコード生成（URL、テキストなど）
 
 ### 🤖 全般機能
 - `/help` - 全体のコマンド一覧
 - `/ping` - Bot応答確認
 
-### 🔒 プライバシー管理機能
-- `/privacy_mode <モード> [機能]` - 共有/プライベートモードの切り替え
-- `/privacy_status` - 現在のプライバシー設定確認
 
 ---
 
@@ -195,11 +193,6 @@ uvicorn server:app --host 0.0.0.0 --port 8080
 | スプレッドシート連携エラー | `/task_sync` で状態確認、スプレッドシート ID を確認 |
 | 認証エラー | `credentials.json` の配置と内容を確認 |
 
-### プライバシー設定の問題
-| 症状 | 対策 |
-|------|------|
-| 他人のデータが見えない | `/privacy_status` で設定確認、共有モードに変更 |
-| 自分のデータしか見えない | プライベートモードになっている可能性、設定を確認 |
 
 ---
 
@@ -213,8 +206,6 @@ uvicorn server:app --host 0.0.0.0 --port 8080
 - [Googleカレンダー連携](docs/GOOGLE_CALENDAR_SETUP.md) - Googleカレンダー連携の設定方法
 - [Googleスプレッドシート連携](docs/GOOGLE_SHEETS_SETUP.md) - Googleスプレッドシート連携の設定方法
 
-### 🔒 プライバシー・セキュリティ
-- [プライバシー管理](docs/PRIVACY_MANAGEMENT.md) - 共有/プライベートモードの設定方法
 
 ### 📝 その他
 - [変更履歴](docs/CHANGELOG.md) - バージョン別の変更内容
@@ -230,7 +221,7 @@ uvicorn server:app --host 0.0.0.0 --port 8080
 ### 🔄 データ管理
 - **ローカル**: JSON ファイルでの軽量データ管理
 - **Google 連携**: カレンダーとスプレッドシートでのクラウド同期
-- **プライバシー制御**: ユーザー別の表示フィルタリング機能
+
 
 ## 🔧 新機能の追加方法
 
@@ -243,7 +234,7 @@ uvicorn server:app --host 0.0.0.0 --port 8080
 ### 自動生成されるファイル
 - `data/events.json` - カレンダー予定データ（ローカルモード時）
 - `data/tasks.json` - タスク管理データ（ローカルモード時）
-- `data/user_settings.json` - ユーザーのプライバシー設定
+
 - `data/token.json` - Google Calendar API トークン（認証後）
 - `data/sheets_token.json` - Google Sheets API トークン（認証後）
 
@@ -266,7 +257,7 @@ async def setup_hook(self):
     await self.load_extension("app.cogs.splatoon")
     await self.load_extension("app.cogs.calendar")
     await self.load_extension("app.cogs.tasks")
-    await self.load_extension("app.cogs.user_management")
+
     # await self.load_extension("app.cogs.general")  # 無効化例
 ```
 
