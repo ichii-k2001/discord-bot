@@ -170,6 +170,14 @@ Google Sheets連携の設定完了後に以下の機能が利用可能になり�
 - `/qr_help` - QRコード機能のヘルプ
 - `/qr <テキスト>` - QRコード生成（URL、テキストなど）
 
+### ⏰ リマインダー機能
+- `/remind_help` - リマインダー機能のヘルプ
+- `/remind <時間> [メッセージ]` - 相対時間リマインダー（例: 5m, 1h, 2d）
+- `/remind_at <日付> <時刻> [メッセージ]` - 絶対時間リマインダー（例: 明日 9:00）
+- `/remind_list` - 設定中のリマインダー一覧表示
+- Bot再起動後も継続される永続化対応
+- スレッド内参加者への一括メンション機能
+
 ### 🤖 全般機能
 - `/help` - 全体のコマンド一覧
 - `/ping` - Bot応答確認
@@ -234,6 +242,7 @@ Google Sheets連携の設定完了後に以下の機能が利用可能になり�
 ### 自動生成されるファイル
 - `data/events.json` - カレンダー予定データ（ローカルモード時）
 - `data/tasks.json` - タスク管理データ（ローカルモード時）
+- `data/reminders.json` - リマインダーデータ（永続化用）
 
 - `data/token.json` - Google Calendar API トークン（認証後）
 - `data/sheets_token.json` - Google Sheets API トークン（認証後）
