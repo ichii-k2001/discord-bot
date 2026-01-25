@@ -12,52 +12,46 @@ class MultiFeatureBot(commands.Bot):
 
     async def setup_hook(self):
         # 各機能のCogを読み込み
-        try:
-            await self.load_extension("app.cogs.splatoon")
-            print("✅ Splatoon cog loaded")
-        except Exception as e:
-            print(f"❌ Failed to load splatoon cog: {e}")
-        
         # await self.load_extension("app.cogs.calendar")  # 一時的に無効化（Google連携設定待ち）
         # await self.load_extension("app.cogs.tasks")     # 一時的に無効化（Google連携設定待ち）
 
         try:
             await self.load_extension("app.cogs.qr")
-            print("✅ QR cog loaded")
+            print("[OK] QR cog loaded")
         except Exception as e:
-            print(f"❌ Failed to load QR cog: {e}")
+            print(f"[ERROR] Failed to load QR cog: {e}")
         
         try:
             await self.load_extension("app.cogs.reminder")
-            print("✅ Reminder cog loaded")
+            print("[OK] Reminder cog loaded")
         except Exception as e:
-            print(f"❌ Failed to load reminder cog: {e}")
+            print(f"[ERROR] Failed to load reminder cog: {e}")
         
         try:
             await self.load_extension("app.cogs.general")
-            print("✅ General cog loaded")
+            print("[OK] General cog loaded")
         except Exception as e:
-            print(f"❌ Failed to load general cog: {e}")
+            print(f"[ERROR] Failed to load general cog: {e}")
         
         try:
             await self.load_extension("app.cogs.translate")
-            print("✅ Translate cog loaded")
+            print("[OK] Translate cog loaded")
         except Exception as e:
-            print(f"❌ Failed to load translate cog: {e}")
+            print(f"[ERROR] Failed to load translate cog: {e}")
         
         # スラッシュコマンドを同期
         try:
             synced = await self.tree.sync()
-            print(f"✅ Synced {len(synced)} commands")
+            print(f"[OK] Synced {len(synced)} commands")
             for cmd in synced:
                 print(f"  - {cmd.name}: {cmd.description}")
         except Exception as e:
-            print(f"❌ Failed to sync commands: {e}")
+            print(f"[ERROR] Failed to sync commands: {e}")
 
 bot = MultiFeatureBot()
 
 @bot.event
 async def on_ready():
-    print(f"✅ Logged in as {bot.user}")
-    print(f"📊 Serving {len(bot.guilds)} guilds")
-    print("🚀 Bot is ready!")
+    print(f"[OK] Logged in as {bot.user}")
+    print(f"[INFO] Serving {len(bot.guilds)} guilds")
+    print("[START] Bot is ready!")

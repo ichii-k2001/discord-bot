@@ -98,26 +98,26 @@ class ReminderManager:
 class ReminderCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        print("🔄 Initializing ReminderCog...")
+        print("[UTIL] Initializing ReminderCog...")
         try:
             self.reminder_manager = ReminderManager()
-            print("✅ ReminderManager initialized")
+            print("[OK] ReminderManager initialized")
         except Exception as e:
-            print(f"❌ ReminderManager initialization failed: {e}")
+            print(f"[ERROR] ReminderManager initialization failed: {e}")
             raise
         
         try:
             if not self.check_reminders.is_running():
                 self.check_reminders.start()  # バックグラウンドタスク開始
-                print("✅ Background task started")
+                print("[OK] Background task started")
             else:
-                print("⚠️ Background task already running")
+                print("[WARN] Background task already running")
         except Exception as e:
-            print(f"❌ Background task start failed: {e}")
+            print(f"[ERROR] Background task start failed: {e}")
             # タスク開始に失敗してもCogの読み込みは継続
             pass
         
-        print("✅ ReminderCog initialization complete")
+        print("[OK] ReminderCog initialization complete")
     
     def cog_unload(self):
         """Cog終了時にタスクを停止"""
@@ -163,7 +163,7 @@ class ReminderCog(commands.Cog):
                     thread_mentions = " ".join([f"<@{uid}>" for uid in other_users])
                     mentions += f" {thread_mentions}"
             
-            await channel.send(f"⏰ {mentions} リマインダー: {reminder['message']}")
+            await channel.send(f"[REMIND] {mentions} リマインダー: {reminder['message']}")
             
         except Exception as e:
             print(f"リマインダー実行エラー: {e}")
@@ -181,14 +181,14 @@ class ReminderCog(commands.Cog):
             seconds = self.parse_time(time)
             if seconds is None:
                 await interaction.response.send_message(
-                    "❌ 時間形式が無効です。以下の形式を使用してください: 5m, 1h, 2d", 
+                    "[ERROR] 時間形式が無効です。以下の形式を使用してください: 5m, 1h, 2d", 
                     ephemeral=True
                 )
                 return
             
             if seconds > 86400 * 30:  # 30日間が上限
                 await interaction.response.send_message(
-                    "❌ リマインダーは30日以内で設定してください", 
+                    "[ERROR] リマインダーは30日以内で設定してください", 
                     ephemeral=True
                 )
                 return
@@ -205,26 +205,26 @@ class ReminderCog(commands.Cog):
                 thread_count = len(thread_users)
                 if thread_count > 0:
                     await interaction.response.send_message(
-                        f"✅ **リマインダー設定完了**\n\n"
-                        f"⏰ **実行時刻:** {time}後\n"
-                        f"💬 **メッセージ:** {message}\n"
-                        f"📝 **スレッドメンション:** {thread_count}人\n"
-                        f"🆔 **ID:** `{target_time.strftime('%m%d%H%M')}` (削除時に使用)"
+                        f"[OK] **リマインダー設定完了**\n\n"
+                        f"[REMIND] **実行時刻:** {time}後\n"
+                        f"[INFO] **メッセージ:** {message}\n"
+                        f"[INFO] **スレッドメンション:** {thread_count}人\n"
+                        f"[UTIL] **ID:** `{target_time.strftime('%m%d%H%M')}` (削除時に使用)"
                     )
                 else:
                     await interaction.response.send_message(
-                        f"✅ **リマインダー設定完了**\n\n"
-                        f"⏰ **実行時刻:** {time}後\n"
-                        f"💬 **メッセージ:** {message}\n"
-                        f"📝 **スレッドメンション:** なし（他のユーザーが見つかりませんでした）\n"
-                        f"🆔 **ID:** `{target_time.strftime('%m%d%H%M')}` (削除時に使用)"
+                        f"[OK] **リマインダー設定完了**\n\n"
+                        f"[REMIND] **実行時刻:** {time}後\n"
+                        f"[INFO] **メッセージ:** {message}\n"
+                        f"[INFO] **スレッドメンション:** なし（他のユーザーが見つかりませんでした）\n"
+                        f"[UTIL] **ID:** `{target_time.strftime('%m%d%H%M')}` (削除時に使用)"
                     )
             else:
                 await interaction.response.send_message(
-                    f"✅ **リマインダー設定完了**\n\n"
-                    f"⏰ **実行時刻:** {time}後\n"
-                    f"💬 **メッセージ:** {message}\n"
-                    f"🆔 **ID:** `{target_time.strftime('%m%d%H%M')}` (削除時に使用)"
+                    f"[OK] **リマインダー設定完了**\n\n"
+                    f"[REMIND] **実行時刻:** {time}後\n"
+                    f"[INFO] **メッセージ:** {message}\n"
+                    f"[UTIL] **ID:** `{target_time.strftime('%m%d%H%M')}` (削除時に使用)"
                 )
             
             # リマインダーをJSONに保存
@@ -242,31 +242,31 @@ class ReminderCog(commands.Cog):
             if mention_thread_users and hasattr(interaction.channel, 'parent'):
                 if thread_users:
                     await interaction.edit_original_response(content=
-                        f"✅ **リマインダー設定完了**\n\n"
-                        f"⏰ **実行時刻:** {time}後\n"
-                        f"💬 **メッセージ:** {message}\n"
-                        f"📝 **スレッドメンション:** {len(thread_users)}人\n"
-                        f"🆔 **ID:** `{short_id}` (削除時に使用)"
+                        f"[OK] **リマインダー設定完了**\n\n"
+                        f"[REMIND] **実行時刻:** {time}後\n"
+                        f"[INFO] **メッセージ:** {message}\n"
+                        f"[INFO] **スレッドメンション:** {len(thread_users)}人\n"
+                        f"[UTIL] **ID:** `{short_id}` (削除時に使用)"
                     )
                 else:
                     await interaction.edit_original_response(content=
-                        f"✅ **リマインダー設定完了**\n\n"
-                        f"⏰ **実行時刻:** {time}後\n"
-                        f"💬 **メッセージ:** {message}\n"
-                        f"📝 **スレッドメンション:** なし（他のユーザーが見つかりませんでした）\n"
-                        f"🆔 **ID:** `{short_id}` (削除時に使用)"
+                        f"[OK] **リマインダー設定完了**\n\n"
+                        f"[REMIND] **実行時刻:** {time}後\n"
+                        f"[INFO] **メッセージ:** {message}\n"
+                        f"[INFO] **スレッドメンション:** なし（他のユーザーが見つかりませんでした）\n"
+                        f"[UTIL] **ID:** `{short_id}` (削除時に使用)"
                     )
             else:
                 await interaction.edit_original_response(content=
-                    f"✅ **リマインダー設定完了**\n\n"
-                    f"⏰ **実行時刻:** {time}後\n"
-                    f"💬 **メッセージ:** {message}\n"
-                    f"🆔 **ID:** `{short_id}` (削除時に使用)"
+                    f"[OK] **リマインダー設定完了**\n\n"
+                    f"[REMIND] **実行時刻:** {time}後\n"
+                    f"[INFO] **メッセージ:** {message}\n"
+                    f"[UTIL] **ID:** `{short_id}` (削除時に使用)"
                 )
                 
         except Exception as e:
             await interaction.response.send_message(
-                f"❌ リマインダー設定エラー: {str(e)}", 
+                f"[ERROR] リマインダー設定エラー: {str(e)}", 
                 ephemeral=True
             )    
 
@@ -324,7 +324,7 @@ class ReminderCog(commands.Cog):
             target_datetime = self.parse_datetime(date, time)
             if target_datetime is None:
                 await interaction.response.send_message(
-                    "❌ 日時形式が無効です。\n"
+                    "[ERROR] 日時形式が無効です。\n"
                     "**日付例:** 2024-12-25, 12/25, 今日, 明日\n"
                     "**時刻例:** 14:30, 2:30pm, 9:00",
                     ephemeral=True
@@ -334,7 +334,7 @@ class ReminderCog(commands.Cog):
             now = datetime.now()
             if target_datetime <= now:
                 await interaction.response.send_message(
-                    "❌ 過去の日時は指定できません", 
+                    "[ERROR] 過去の日時は指定できません", 
                     ephemeral=True
                 )
                 return
@@ -342,7 +342,7 @@ class ReminderCog(commands.Cog):
             # 30日以内の制限
             if (target_datetime - now).days > 30:
                 await interaction.response.send_message(
-                    "❌ リマインダーは30日以内で設定してください", 
+                    "[ERROR] リマインダーは30日以内で設定してください", 
                     ephemeral=True
                 )
                 return
