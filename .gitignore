@@ -1,0 +1,19 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+
+# データファイル（自動生成されるもののみ除外）
+data/events.json
+data/tasks.json
+data/reminders.json
+
+# Google Calendar認証情報
+credentials.json
+data/token.json
+
+# Google Sheets認証情報
+data/sheets_token.json
+
+# ユーザー設定
+data/user_settings.json

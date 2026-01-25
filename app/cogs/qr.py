@@ -42,7 +42,7 @@ class QRCodeGenerator(commands.Cog):
             
             # 生成者情報を含むEmbed
             embed = discord.Embed(
-                title="📱 QRコード生成完了",
+                title="[QR] QRコード生成完了",
                 description=f"**変換内容:** `{display_text}`",
                 color=0x00ff00,
                 timestamp=datetime.now()
@@ -57,7 +57,7 @@ class QRCodeGenerator(commands.Cog):
             
         except Exception as e:
             error_embed = discord.Embed(
-                title="❌ QRコード生成エラー",
+                title="[ERROR] QRコード生成エラー",
                 description=f"QRコードの生成に失敗しました。\n\n**エラー:** {str(e)}",
                 color=0xff0000
             )
@@ -70,19 +70,19 @@ class QRHelp(commands.Cog):
     @app_commands.command(name="qr_help", description="QRコード機能のヘルプを表示します")
     async def help(self, interaction: discord.Interaction):
         response = (
-            "**📱 QRコード生成機能 コマンド一覧**\n\n"
-            "👉 `/qr <テキスト>`\n"
+            "**[QR] QRコード生成機能 コマンド一覧**\n\n"
+            "[INFO] `/qr <テキスト>`\n"
             "　- テキストやURLをQRコードに変換します\n\n"
-            "💡 **使用例:**\n"
+            "[TIP] **使用例:**\n"
             "• `/qr https://github.com` - URLをQRコードに変換\n"
             "• `/qr Hello World!` - テキストをQRコードに変換\n"
             "• `/qr WIFI:T:WPA;S:MyNetwork;P:MyPassword;;` - WiFi情報をQRコードに\n\n"
-            "📋 **機能:**\n"
+            "[INFO] **機能:**\n"
             "• 任意のテキストやURLをQRコードに変換\n"
             "• 高品質なPNG画像として出力\n"
             "• 生成者情報と生成時刻を記録\n"
             "• エラーハンドリング付き\n\n"
-            "👉 `/qr_help`\n"
+            "[INFO] `/qr_help`\n"
             "　- このヘルプを表示します"
         )
         await interaction.response.send_message(response, ephemeral=True)

@@ -29,7 +29,7 @@ class TranslateCog(commands.Cog):
         if not result['success']:
             # エラー時の処理
             embed = discord.Embed(
-                title="❌ 翻訳エラー",
+                title="[ERROR] 翻訳エラー",
                 description=result['error'],
                 color=0xff4444
             )
@@ -61,7 +61,7 @@ class TranslateCog(commands.Cog):
             
             # 埋め込みメッセージ作成
             embed = discord.Embed(
-                title="🌐 翻訳結果",
+                title="[TRANS] 翻訳結果",
                 description=f"{source_flag} → {target_flag}",
                 color=0x4285f4
             )
@@ -102,21 +102,21 @@ class TranslateCog(commands.Cog):
             warning_message = self._get_usage_warning(user_stats)
             if warning_message:
                 embed.add_field(
-                    name="⚠️ 使用量お知らせ",
+                    name="[WARN] 使用量お知らせ",
                     value=warning_message,
                     inline=False
                 )
             
             # 埋め込み表示後に翻訳結果をコピー用として送信
             await interaction.followup.send(embed=embed)
-            await interaction.followup.send(f"📋 **コピー用:**\n{result['translated_text']}")
+            await interaction.followup.send(f"[UTIL] **コピー用:**\n{result['translated_text']}")
         else:
             # シンプル表示モード（翻訳結果のみ）
             user_stats = self.translate_service.get_user_stats(interaction.user.id)
             
             # 使用制限が10回を切った場合は警告表示
             if user_stats['daily'] >= self.translate_service.RATE_LIMITS['per_day'] - 10:
-                usage_info = f"\n\n⚠️ 今日の使用: {user_stats['daily']}/{self.translate_service.RATE_LIMITS['per_day']}"
+                usage_info = f"\n\n[WARN] 今日の使用: {user_stats['daily']}/{self.translate_service.RATE_LIMITS['per_day']}"
                 await interaction.followup.send(result['translated_text'] + usage_info)
             else:
                 await interaction.followup.send(result['translated_text'])
@@ -125,21 +125,21 @@ class TranslateCog(commands.Cog):
     async def translate_help(self, interaction: discord.Interaction):
         """翻訳機能のヘルプ"""
         embed = discord.Embed(
-            title="🌐 翻訳機能ヘルプ",
+            title="[TRANS] 翻訳機能ヘルプ",
             description="サーバー内で簡単にテキスト翻訳ができます",
             color=0x4285f4
         )
         
         # 基本的な使い方
         embed.add_field(
-            name="📝 基本的な使い方",
+            name="[INFO] 基本的な使い方",
             value=(
                 "```\n"
                 "/translate <言語> <テキスト> [詳細表示]\n"
                 "```\n"
                 "**例:**\n"
                 "`/translate language:en text:今日はいい天気ですね` → 翻訳結果のみ\n"
-                "`/translate language:🇯🇵 日本語 (ja) text:Hello` → 選択肢から選択\n"
+                "`/translate language:[FLAG] 日本語 (ja) text:Hello` → 選択肢から選択\n"
                 "`/translate language:ja text:Hello show_details:True` → 詳細+コピー用"
             ),
             inline=False
@@ -151,7 +151,7 @@ class TranslateCog(commands.Cog):
             lang_list.append(f"{info['flag']} `{code}` - {info['name']}")
         
         embed.add_field(
-            name="🌍 対応言語",
+            name="[TRANS] 対応言語",
             value="\n".join(lang_list),
             inline=False
         )
@@ -159,7 +159,7 @@ class TranslateCog(commands.Cog):
         # 制限事項
         limits = self.translate_service.RATE_LIMITS
         embed.add_field(
-            name="⚠️ 使用制限",
+            name="[WARN] 使用制限",
             value=(
                 f"• 1分間: {limits['per_minute']}回まで\n"
                 f"• 1時間: {limits['per_hour']}回まで\n"
@@ -171,7 +171,7 @@ class TranslateCog(commands.Cog):
         
         # 機能説明
         embed.add_field(
-            name="✨ 機能",
+            name="[INFO] 機能",
             value=(
                 "• 高精度な翻訳（Google翻訳ベース）\n"
                 "• 柔軟な言語入力（選択肢・直接入力対応）\n"
@@ -185,7 +185,7 @@ class TranslateCog(commands.Cog):
             inline=False
         )
         
-        embed.set_footer(text="💡 ヒント: 言語は選択肢から選ぶか、直接コード入力（ja, en等）も可能。詳細表示ではコピー用テキストも提供されます")
+        embed.set_footer(text="[TIP] ヒント: 言語は選択肢から選ぶか、直接コード入力（ja, en等）も可能。詳細表示ではコピー用テキストも提供されます")
         
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
